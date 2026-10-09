@@ -4,8 +4,22 @@ const input = document.getElementById("task-input");
 const list = document.getElementById("task-list");
 const count = document.getElementById("task-count");
 
-let tasks = [];
+let tasks = JSON.parse(localStorage.getItem("teamtask-tasks") || "[]");
 let currentFilter = "all";
+
+function saveTasks() {
+  localStorage.setItem("teamtask-tasks", JSON.stringify(tasks));
+}
+
+function getTaskSummary() {
+  const completed = tasks.filter(task => task.completed).length;
+
+  return {
+    total: tasks.length,
+    completed,
+    pending: tasks.length - completed
+  };
+}
 
 function renderTasks() {
   list.innerHTML = "";
@@ -26,9 +40,11 @@ function renderTasks() {
     const label = document.createElement("span");
     label.textContent = task.text;
     label.style.cursor = "pointer";
+    label.title = "Click to toggle completion";
 
     label.addEventListener("click", () => {
       task.completed = !task.completed;
+      saveTasks();
       renderTasks();
     });
 
@@ -37,6 +53,7 @@ function renderTasks() {
 
     remove.addEventListener("click", () => {
       tasks = tasks.filter(item => item.id !== task.id);
+      saveTasks();
       renderTasks();
     });
 
@@ -44,9 +61,17 @@ function renderTasks() {
     list.appendChild(li);
   });
 
+  const summary = getTaskSummary();
+
   count.textContent =
-    `${tasks.length} tasks · ` +
-    `${tasks.filter(task => task.completed).length} completed`;
+    `${summary.total} tasks · ` +
+    `${summary.completed} completed · ${summary.pending} pending`;
+
+  if (visibleTasks.length === 0) {
+    const empty = document.createElement("li");
+    empty.textContent = "No tasks to display.";
+    list.appendChild(empty);
+  }
 }
 
 form.addEventListener("submit", event => {
@@ -61,6 +86,7 @@ form.addEventListener("submit", event => {
     completed: false
   });
 
+  saveTasks();
   input.value = "";
   renderTasks();
 });
