@@ -58,3 +58,35 @@ li.completed span {
   text-decoration: line-through;
   color: #64748b;
 }
+
+/* Developer 2: Styling improvements */
+
+.container {
+  border: 1px solid #e2e8f0;
+}
+
+h1 {
+  font-size: 34px;
+  letter-spacing: -1px;
+}
+
+button {
+  transition: background-color 0.2s ease,
+              transform 0.2s ease;
+}
+
+button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.filters button:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+#task-count {
+  font-size: 14px;
+  color: #64748b;
+}
+
